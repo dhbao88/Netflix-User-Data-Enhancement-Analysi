@@ -71,10 +71,10 @@ group by subscription_type;
 #tổng doanh thu và tỷ lệ phần trăm từng loại gói đăng ký
 select 
     subscription_type,
-    sum(monthly_revenue) AS total_revenue,
-    (sum(monthly_revenue) / (SELECT sum(monthly_revenue) FROM netflix)) * 100 AS revenue_percentage
-FROM netflix
-GROUP BY subscription_type;
+    sum(monthly_revenue) as total_revenue,
+    (sum(monthly_revenue) / (select sum(monthly_revenue) from netflix)) * 100 as revenue_percentage
+from netflix
+group by subscription_type;
 
 # So sánh doanh thu từng quốc gia và số lượng người dùng ở mỗi quốc gia
 select country, count(user_id) as user_count, sum(monthly_revenue) as total_revenue
