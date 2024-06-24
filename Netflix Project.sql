@@ -55,12 +55,6 @@ from netflix
 group by country, device
 order by country, device;
 
-#tổng số lượng người dùng theo quốc gia và thiết bị sử dụng
-select country, device, count(user_id) as user_count
-from netflix
-group by country, device
-order by country, device;
-
 ### Đánh giá hiệu quả gói đăng ký và doanh thu
 
 #tổng doanh thu hàng tháng từ các loại gói đăng ký 
@@ -69,12 +63,19 @@ from netflix
 group by subscription_type;
 
 #tổng doanh thu và tỷ lệ phần trăm từng loại gói đăng ký
-select 
-    subscription_type,
-    sum(monthly_revenue) as total_revenue,
-    (sum(monthly_revenue) / (select sum(monthly_revenue) from netflix)) * 100 as revenue_percentage
-from netflix
-group by subscription_type;
+select
+	subscription_type,
+    total_revenue,
+    (total_revenue/sum_total_revenue) *100 as revenue_percentage 
+from
+	(select
+		subscription_type,
+		sum(monthly_revenue) as total_revenue,
+		(select sum(monthly_revenue) from netflix)  as sum_total_revenue
+	from netflix 
+    group by subscription_type) as sub
+Order by total_revenue, revenue_percentage;
+
 
 # So sánh doanh thu từng quốc gia và số lượng người dùng ở mỗi quốc gia
 select country, count(user_id) as user_count, sum(monthly_revenue) as total_revenue
